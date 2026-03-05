@@ -1,0 +1,905 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Email Reply Assistant</title>
+    <style>
+        /* 
+        Professional Color Palette:
+        Primary: #2563EB (Blue) - Main actions, links
+        Secondary: #1E293B (Dark Slate) - Text, headers
+        Accent: #10B981 (Green) - Success, positive actions
+        Background: #F8FAFC (Light Gray) - Backgrounds, subtle areas
+        */
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #F8FAFC;
+            min-height: 100vh;
+            padding: 20px;
+            color: #1E293B;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 10px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .navbar {
+            background: white;
+            color: #1E293B;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #E2E8F0;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 20px;
+        }
+        
+        .navbar h1 {
+            font-size: 24px;
+            color: #1E293B;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .navbar h1::before {
+            content: "📧";
+            font-size: 28px;
+        }
+        
+        .navbar nav a {
+            color: #1E293B;
+            text-decoration: none;
+            margin-left: 24px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .navbar nav a:hover {
+            background: #F8FAFC;
+            color: #2563EB;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 24px 20px;
+            background: #F8FAFC;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        .header h2 {
+            font-size: 16px;
+            font-weight: 500;
+            color: #64748B;
+        }
+        
+        .contact-form {
+            padding: 24px 30px;
+            background: white;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        
+        .contact-form h3 {
+            margin-bottom: 8px;
+            color: #1E293B;
+            font-size: 16px;
+            font-weight: 600;
+        }
+        
+        .contact-form p {
+            font-size: 13px;
+            color: #64748B;
+            margin-bottom: 16px;
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .form-row input {
+            padding: 12px 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            color: #1E293B;
+            background: white;
+            transition: all 0.2s;
+        }
+        
+        .form-row input:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-row input::placeholder {
+            color: #94A3B8;
+        }
+        
+        .content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            padding: 30px;
+            background: #F8FAFC;
+        }
+        
+        .panel {
+            display: flex;
+            flex-direction: column;
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #E2E8F0;
+        }
+        
+        .panel h2 {
+            color: #1E293B;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        textarea {
+            flex: 1;
+            padding: 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 14px;
+            resize: none;
+            min-height: 400px;
+            transition: all 0.2s;
+            color: #1E293B;
+            line-height: 1.6;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        textarea::placeholder {
+            color: #94A3B8;
+        }
+        
+        .button-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            margin-top: 10px;
+        }
+        
+        button {
+            background: #2563EB;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            font-size: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        
+        button:hover {
+            background: #1D4ED8;
+            box-shadow: 0 4px 6px rgba(37, 99, 235, 0.2);
+        }
+        
+        button:active {
+            transform: scale(0.98);
+        }
+        
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #2563EB;
+            margin-top: 12px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+        
+        .error {
+            color: #DC2626;
+            text-align: center;
+            margin-top: 12px;
+            padding: 12px;
+            background: #FEE2E2;
+            border-radius: 8px;
+            display: none;
+            font-size: 14px;
+            border: 1px solid #FECACA;
+        }
+        
+        @media (max-width: 768px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .navbar nav {
+                display: flex;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+            .navbar nav a {
+                margin: 5px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>📧 CRM Email Assistant</h1>
+        <nav>
+            <a href="/">Email Assistant</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/companies">Companies</a>
+            <a href="/contacts">Contacts</a>
+            <a href="/conversations">Conversations</a>
+        </nav>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h2>AI-powered email response generator with conversation tracking</h2>
+        </div>
+        
+        <div class="contact-form">
+            <h3>Contact Information (Optional - helps track conversation history)</h3>
+            <p style="font-size: 12px; color: #666; margin-bottom: 12px;">
+                💡 Fields will auto-fill automatically as you type the email conversation below
+            </p>
+            <div class="form-row">
+                <input type="email" id="contactEmail" placeholder="Contact Email" autocomplete="off">
+                <input type="text" id="contactName" placeholder="Contact Name" autocomplete="off">
+                <input type="text" id="companyName" placeholder="Company Name" autocomplete="off">
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="panel">
+                <h2>📥 Email Conversation</h2>
+                <textarea id="conversation" placeholder="Paste the email conversation here...
+
+Example:
+From: customer@example.com
+Subject: Question about pricing
+
+Hi,
+
+I'm interested in your Enterprise plan. Can you tell me more about the pricing and what features are included?
+
+Thanks,
+John"></textarea>
+            </div>
+            
+            <div class="panel">
+                <h2>📤 Generated Reply</h2>
+                <textarea id="reply" placeholder="Your AI-generated reply will appear here..." readonly></textarea>
+                <div style="margin-top: 12px; display: flex; gap: 8px; justify-content: flex-end; flex-wrap: wrap;">
+                    <button type="button" id="editBtn" onclick="toggleEdit()" style="display: none; background: #64748B; padding: 10px 20px; font-size: 13px; border-radius: 8px;">✏️ Edit Reply</button>
+                    <button type="button" id="copyBtn" onclick="copyReply()" style="display: none; background: #10B981; padding: 10px 20px; font-size: 13px; border-radius: 8px;">📋 Copy Reply</button>
+                    <button type="button" id="sendBtn" onclick="sendEmail()" style="display: none; background: #2563EB; color: white; padding: 10px 20px; font-size: 13px; border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">📧 Send Email</button>
+                </div>
+            </div>
+            
+            <div class="button-container">
+                <button id="generateBtn" onclick="generateReply()">Generate Reply</button>
+                <div class="loading" id="loading">⏳ Generating reply...</div>
+                <div class="error" id="error"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        async function generateReply() {
+            const conversation = document.getElementById('conversation').value.trim();
+            const contactEmail = document.getElementById('contactEmail').value.trim();
+            const contactName = document.getElementById('contactName').value.trim();
+            const companyName = document.getElementById('companyName').value.trim();
+            const replyBox = document.getElementById('reply');
+            const generateBtn = document.getElementById('generateBtn');
+            const loading = document.getElementById('loading');
+            const errorDiv = document.getElementById('error');
+            const editBtn = document.getElementById('editBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            
+            if (!conversation) {
+                showError('Please enter an email conversation');
+                return;
+            }
+            
+            generateBtn.disabled = true;
+            loading.style.display = 'block';
+            errorDiv.style.display = 'none';
+            replyBox.value = '';
+            editBtn.style.display = 'none';
+            copyBtn.style.display = 'none';
+            
+            try {
+                const response = await fetch('/generate-reply', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ 
+                        conversation,
+                        contact_email: contactEmail,
+                        contact_name: contactName,
+                        company_name: companyName
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to generate reply');
+                }
+                
+                replyBox.value = data.reply;
+                
+                // Show classification info
+                if (data.email_type || data.sentiment) {
+                    const info = `\n\n--- Email Analysis ---\nType: ${data.email_type}\nSentiment: ${data.sentiment}`;
+                    replyBox.value += info;
+                }
+                
+                // Show edit and copy buttons
+                editBtn.style.display = 'inline-block';
+                copyBtn.style.display = 'inline-block';
+                document.getElementById('sendBtn').style.display = 'inline-block';
+                
+                // Store conversation ID for sending email
+                window.currentConversationId = data.contact_id;
+                
+            } catch (error) {
+                showError(error.message);
+            } finally {
+                generateBtn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        function toggleEdit() {
+            const replyBox = document.getElementById('reply');
+            const editBtn = document.getElementById('editBtn');
+            
+            if (replyBox.readOnly) {
+                // Enable editing
+                replyBox.readOnly = false;
+                replyBox.style.background = '#FEF3C7';
+                replyBox.style.borderColor = '#F59E0B';
+                editBtn.textContent = '💾 Save Changes';
+                editBtn.style.background = '#10B981';
+                replyBox.focus();
+            } else {
+                // Save and disable editing
+                replyBox.readOnly = true;
+                replyBox.style.background = '';
+                replyBox.style.borderColor = '#E2E8F0';
+                editBtn.textContent = '✏️ Edit Reply';
+                editBtn.style.background = '#64748B';
+                
+                // Show saved notification
+                showNotification('✓ Changes saved!', '#10B981');
+            }
+        }
+        
+        function copyReply() {
+            const replyBox = document.getElementById('reply');
+            replyBox.select();
+            document.execCommand('copy');
+            
+            // Show copied notification
+            showNotification('✓ Reply copied to clipboard!', '#10B981');
+        }
+        
+        function showNotification(message, color) {
+            const notification = document.createElement('div');
+            notification.style.cssText = `position: fixed; top: 20px; right: 20px; background: ${color}; color: white; padding: 12px 20px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 10000; animation: slideIn 0.3s ease; font-size: 14px; font-weight: 500;`;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+        
+        async function sendEmail() {
+            const contactEmail = document.getElementById('contactEmail').value.trim();
+            const replyText = document.getElementById('reply').value.trim();
+            const sendBtn = document.getElementById('sendBtn');
+            
+            if (!contactEmail) {
+                showNotification('❌ Please enter contact email', '#DC2626');
+                return;
+            }
+            
+            if (!replyText) {
+                showNotification('❌ No reply to send', '#DC2626');
+                return;
+            }
+            
+            // Extract subject and body from reply
+            const lines = replyText.split('\n');
+            let subject = 'Re: Your Inquiry';
+            let body = replyText;
+            
+            // Check if reply has Subject: line
+            if (lines[0].startsWith('Subject:')) {
+                subject = lines[0].replace('Subject:', '').trim();
+                body = lines.slice(2).join('\n').trim(); // Skip subject and empty line
+            }
+            
+            // Confirm before sending
+            if (!confirm(`Send email to ${contactEmail}?\n\nSubject: ${subject}`)) {
+                return;
+            }
+            
+            sendBtn.disabled = true;
+            sendBtn.textContent = '📧 Sending...';
+            
+            try {
+                const response = await fetch('/api/send-email', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        to_email: contactEmail,
+                        subject: subject,
+                        body: body,
+                        conversation_id: window.currentConversationId
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Failed to send email');
+                }
+                
+                showNotification('✓ Email sent successfully!', '#10B981');
+                sendBtn.textContent = '✓ Email Sent';
+                sendBtn.style.background = '#10B981';
+                
+            } catch (error) {
+                showNotification('❌ ' + error.message, '#DC2626');
+                sendBtn.disabled = false;
+                sendBtn.textContent = '📧 Send Email';
+            }
+        }
+        
+        // Manual extraction trigger
+        // Smart email parsing - Extract contact info from email conversation (AUTO)
+        let extractTimeout;
+        let extractingIndicator = null;
+        
+        document.getElementById('conversation').addEventListener('input', function(e) {
+            const conversation = e.target.value;
+            
+            // Clear previous timeout
+            clearTimeout(extractTimeout);
+            
+            // Remove previous indicator
+            if (extractingIndicator) {
+                extractingIndicator.remove();
+                extractingIndicator = null;
+            }
+            
+            // Wait for user to stop typing (reduced to 800ms for faster response)
+            extractTimeout = setTimeout(() => {
+                // Only parse if there's an email address present (more lenient)
+                if (conversation.trim().length > 10 && conversation.includes('@')) {
+                    console.log('🔄 Auto-extracting from conversation...');
+                    
+                    // Show extracting indicator
+                    extractingIndicator = document.createElement('div');
+                    extractingIndicator.style.cssText = 'position: fixed; top: 80px; right: 20px; background: #2196f3; color: white; padding: 8px 16px; border-radius: 6px; font-size: 12px; z-index: 9999; animation: slideIn 0.3s ease;';
+                    extractingIndicator.textContent = '🔍 Extracting contact info...';
+                    document.body.appendChild(extractingIndicator);
+                    
+                    // Extract after short delay to show indicator
+                    setTimeout(() => {
+                        smartExtractContactInfo(conversation);
+                        if (extractingIndicator) {
+                            extractingIndicator.remove();
+                            extractingIndicator = null;
+                        }
+                    }, 300);
+                }
+            }, 800); // Reduced from 1500ms to 800ms for faster response
+        });
+        
+        function smartExtractContactInfo(text) {
+            const emailField = document.getElementById('contactEmail');
+            const nameField = document.getElementById('contactName');
+            const companyField = document.getElementById('companyName');
+            
+            console.log('=== EXTRACTION DEBUG ===');
+            console.log('Input text length:', text.length);
+            console.log('First 300 chars:', text.substring(0, 300));
+            
+            let extracted = {
+                email: null,
+                name: null,
+                company: null
+            };
+            
+            // === EMAIL EXTRACTION ===
+            console.log('\n--- Extracting Email ---');
+            
+            // Try all patterns in order
+            let emailMatch;
+            
+            // Pattern 1: From: Name <email@domain.com>
+            emailMatch = text.match(/From:\s*([^<\n]+?)\s*<([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})>/i);
+            if (emailMatch) {
+                console.log('Pattern 1 matched (From: Name <email>)');
+                extracted.email = emailMatch[2].trim();
+                extracted.name = emailMatch[1].trim();
+            }
+            
+            // Pattern 2: From: email@domain.com
+            if (!extracted.email) {
+                emailMatch = text.match(/From:\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i);
+                if (emailMatch) {
+                    console.log('Pattern 2 matched (From: email)');
+                    extracted.email = emailMatch[1].trim();
+                }
+            }
+            
+            // Pattern 3: Email: email@domain.com
+            if (!extracted.email) {
+                emailMatch = text.match(/Email:\s*([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/i);
+                if (emailMatch) {
+                    console.log('Pattern 3 matched (Email:)');
+                    extracted.email = emailMatch[1].trim();
+                }
+            }
+            
+            // Pattern 4: Any email in first 500 characters
+            if (!extracted.email) {
+                const firstPart = text.substring(0, 500);
+                emailMatch = firstPart.match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                if (emailMatch) {
+                    console.log('Pattern 4 matched (any email in first 500 chars)');
+                    extracted.email = emailMatch[1].trim();
+                }
+            }
+            
+            // Pattern 5: Search in last 20 lines (signature)
+            if (!extracted.email) {
+                const lines = text.split('\n');
+                for (let i = Math.max(0, lines.length - 20); i < lines.length; i++) {
+                    const match = lines[i].match(/([a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})/);
+                    if (match) {
+                        console.log('Pattern 5 matched (signature area, line', i, ')');
+                        extracted.email = match[1].trim();
+                        break;
+                    }
+                }
+            }
+            
+            // Filter out example emails
+            if (extracted.email) {
+                const lowerEmail = extracted.email.toLowerCase();
+                if (lowerEmail.includes('example.com') || 
+                    lowerEmail.includes('yourcompany.com') ||
+                    lowerEmail.includes('yourdomain.com') ||
+                    lowerEmail.includes('test.com') ||
+                    lowerEmail.includes('sample.com')) {
+                    console.log('Email filtered out (example domain)');
+                    extracted.email = null;
+                }
+            }
+            
+            console.log('Final extracted email:', extracted.email);
+            
+            // === NAME EXTRACTION ===
+            console.log('\n--- Extracting Name ---');
+            
+            // Pattern 1: Already extracted from "From: Name <email>"
+            if (extracted.name) {
+                console.log('Name already extracted from From header:', extracted.name);
+            }
+            
+            // Pattern 2: Signature patterns (Best regards, Thanks, etc.)
+            if (!extracted.name) {
+                const signaturePatterns = [
+                    /(?:Best regards|Best|Thanks|Thank you|Sincerely|Regards|Cheers|Warm regards|Kind regards|Warmly|Cordially),?\s*[\n\r]+\s*([A-Z][a-z]+(?:\s+[A-Z]\.?\s*)?(?:\s+[A-Z][a-z]+){0,3})/i,
+                    /(?:Best regards|Best|Thanks|Thank you|Sincerely|Regards|Cheers|Warm regards|Kind regards),?\s*[\n\r]+\s*([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,3})/i
+                ];
+                
+                for (let pattern of signaturePatterns) {
+                    const match = text.match(pattern);
+                    if (match && match[1]) {
+                        console.log('Signature pattern matched:', match[1]);
+                        extracted.name = match[1].trim().replace(/[,;:]$/g, '');
+                        break;
+                    }
+                }
+            }
+            
+            // Pattern 3: "I'm Name" or "My name is Name"
+            if (!extracted.name) {
+                const introMatch = text.match(/(?:I'm|I am|my name is|this is)\s+([A-Z][a-zA-Z]+(?:\s+[A-Z][a-zA-Z]+){0,2})/i);
+                if (introMatch) {
+                    console.log('Introduction pattern matched:', introMatch[1]);
+                    extracted.name = introMatch[1].trim();
+                }
+            }
+            
+            // Pattern 4: Look for capitalized name in last 15 lines
+            if (!extracted.name) {
+                const lines = text.split('\n').map(l => l.trim()).filter(l => l);
+                const excludeWords = ['best', 'thanks', 'regards', 'sincerely', 'cheers', 'warmly', 'cordially', 'subject', 'from', 'to', 'date', 'email', 'phone', 'tel', 'fax'];
+                
+                for (let i = lines.length - 1; i >= Math.max(0, lines.length - 15); i--) {
+                    const line = lines[i];
+                    
+                    // Skip if line has email or URL
+                    if (line.includes('@') || line.includes('http')) continue;
+                    
+                    // Check if line looks like a name
+                    if (line.length >= 4 && line.length <= 50) {
+                        const words = line.split(/\s+/);
+                        
+                        // Name should be 2-4 words
+                        if (words.length >= 2 && words.length <= 4) {
+                            // Check if words are capitalized
+                            const allCapitalized = words.every(w => /^[A-Z]/.test(w) && /^[A-Za-z]+$/.test(w));
+                            const firstWordLower = words[0].toLowerCase();
+                            
+                            if (allCapitalized && !excludeWords.includes(firstWordLower)) {
+                                console.log('Found name in line', i, ':', line);
+                                extracted.name = line;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            
+            // Clean and validate name
+            if (extracted.name) {
+                extracted.name = extracted.name.replace(/^(Mr\.|Mrs\.|Ms\.|Dr\.|Prof\.)\s+/i, '');
+                extracted.name = extracted.name.replace(/[,;:]$/g, '').trim();
+                
+                const nameLower = extracted.name.toLowerCase();
+                if (extracted.name.length > 50 || 
+                    ['john doe', 'jane doe', 'customer', 'user', 'client', 'sender'].includes(nameLower)) {
+                    console.log('Name rejected (placeholder or too long)');
+                    extracted.name = null;
+                }
+            }
+            
+            console.log('Final extracted name:', extracted.name);
+            
+            // === COMPANY EXTRACTION ===
+            console.log('\n--- Extracting Company ---');
+            
+            // Pattern 1: Company with common suffixes
+            const companySuffixes = /([A-Z][A-Za-z0-9\s&.,''-]+?\s*(?:Inc\.?|LLC|L\.L\.C\.|Ltd\.?|Limited|Corp\.?|Corporation|Company|Co\.|Technologies|Tech|Solutions|Services|Group|Systems|Software|Pvt\.?\s*Ltd\.?))/gi;
+            let companyMatches = text.match(companySuffixes);
+            if (companyMatches && companyMatches.length > 0) {
+                // Take the first match
+                extracted.company = companyMatches[0].trim().replace(/[,;:]$/g, '');
+                console.log('Company suffix pattern matched:', extracted.company);
+            }
+            
+            // Pattern 2: "from/at Company"
+            if (!extracted.company) {
+                const companyMatch = text.match(/(?:from|at|with|@)\s+([A-Z][A-Za-z0-9\s&.,''-]+)/i);
+                if (companyMatch && companyMatch[1]) {
+                    const company = companyMatch[1].trim().split(/[,.\n]/)[0].trim();
+                    if (company.length >= 3 && company.length <= 60) {
+                        console.log('From/at pattern matched:', company);
+                        extracted.company = company;
+                    }
+                }
+            }
+            
+            // Pattern 3: Email domain to company
+            if (!extracted.company && extracted.email) {
+                const domain = extracted.email.split('@')[1];
+                const commonDomains = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com', 'icloud.com', 'aol.com', 'mail.com', 'protonmail.com', 'live.com', 'msn.com'];
+                
+                if (domain && !commonDomains.includes(domain.toLowerCase())) {
+                    let companyName = domain.split('.')[0];
+                    
+                    // Handle camelCase or compound names
+                    // nexasofttech -> Nexasofttech
+                    companyName = companyName.charAt(0).toUpperCase() + companyName.slice(1);
+                    
+                    console.log('Company from email domain:', companyName);
+                    extracted.company = companyName;
+                }
+            }
+            
+            // Validate company
+            if (extracted.company) {
+                if (extracted.company.length > 100 || extracted.company.length < 2) {
+                    console.log('Company rejected (length)');
+                    extracted.company = null;
+                }
+            }
+            
+            console.log('Final extracted company:', extracted.company);
+            console.log('=== END EXTRACTION ===\n');
+            
+            // === FILL FIELDS ===
+            let filledFields = [];
+            
+            // Fill email field (only if empty)
+            if (extracted.email && !emailField.value.trim()) {
+                emailField.value = extracted.email;
+                emailField.style.background = '#DBEAFE';
+                emailField.style.transition = 'background 0.5s';
+                setTimeout(() => {
+                    emailField.style.background = '';
+                }, 2500);
+                filledFields.push('Email');
+                
+                // Trigger email lookup for existing contacts
+                setTimeout(() => {
+                    emailField.dispatchEvent(new Event('blur'));
+                }, 500);
+            }
+            
+            // Fill name field (only if empty)
+            if (extracted.name && !nameField.value.trim()) {
+                nameField.value = extracted.name;
+                nameField.style.background = '#DBEAFE';
+                nameField.style.transition = 'background 0.5s';
+                setTimeout(() => {
+                    nameField.style.background = '';
+                }, 2500);
+                filledFields.push('Name');
+            }
+            
+            // Fill company field (only if empty)
+            if (extracted.company && !companyField.value.trim()) {
+                companyField.value = extracted.company;
+                companyField.style.background = '#DBEAFE';
+                companyField.style.transition = 'background 0.5s';
+                setTimeout(() => {
+                    companyField.style.background = '';
+                }, 2500);
+                filledFields.push('Company');
+            }
+            
+            // Show notification if any field was auto-filled
+            if (filledFields.length > 0) {
+                console.log('✅ Auto-filled fields:', filledFields.join(', '));
+                showNotification(`✓ Auto-filled: ${filledFields.join(', ')}`, '#10B981');
+            } else {
+                console.log('ℹ️ No new fields to fill (all fields already have values or no data extracted)');
+            }
+            
+            return extracted;
+        }
+        
+        // Email lookup - only fills name/company when you manually enter an email
+        let emailCheckTimeout;
+        document.getElementById('contactEmail').addEventListener('blur', async function(e) {
+            const email = e.target.value.trim();
+            
+            // Only check if email looks valid
+            if (email && email.includes('@') && email.includes('.')) {
+                try {
+                    const response = await fetch(`/api/contact/${encodeURIComponent(email)}/history`);
+                    const data = await response.json();
+                    
+                    if (data.contact) {
+                        const nameField = document.getElementById('contactName');
+                        const companyField = document.getElementById('companyName');
+                        
+                        // Only fill if fields are completely empty
+                        if (!nameField.value.trim() && data.contact.name) {
+                            nameField.value = data.contact.name;
+                            nameField.style.background = '#D1FAE5';
+                            setTimeout(() => {
+                                nameField.style.background = '';
+                            }, 1500);
+                        }
+                        
+                        if (!companyField.value.trim() && data.contact.company_name) {
+                            companyField.value = data.contact.company_name;
+                            companyField.style.background = '#D1FAE5';
+                            setTimeout(() => {
+                                companyField.style.background = '';
+                            }, 1500);
+                        }
+                        
+                        // Show notification about existing contact
+                        if (data.history && data.history.length > 0) {
+                            showNotification(`✓ Found existing contact with ${data.history.length} previous conversation(s)`, '#10B981');
+                        }
+                    }
+                } catch (error) {
+                    // Silently fail - contact doesn't exist yet
+                    console.log('Contact not found, will create new');
+                }
+            }
+        });
+        
+        function showError(message) {
+            const errorDiv = document.getElementById('error');
+            errorDiv.textContent = message;
+            errorDiv.style.display = 'block';
+        }
+        
+        // Allow Enter key to generate (Ctrl+Enter or Cmd+Enter)
+        document.getElementById('conversation').addEventListener('keydown', function(e) {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                generateReply();
+            }
+        });
+    </script>
+    <style>
+        @keyframes slideIn {
+            from {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+        
+        @keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateX(400px);
+                opacity: 0;
+            }
+        }
+    </style>
+</body>
+</html>

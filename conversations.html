@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversations - CRM</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>💬 Conversations</h1>
+        <nav>
+            <a href="/">Email Assistant</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/companies">Companies</a>
+            <a href="/contacts">Contacts</a>
+            <a href="/conversations">Conversations</a>
+        </nav>
+    </div>
+    
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h2>Email Conversations</h2>
+                <p>View and manage all email conversations</p>
+            </div>
+        </div>
+        
+        <div class="filters-bar">
+            <input type="text" id="searchInput" placeholder="Search conversations..." onkeyup="searchConversations()">
+            <select id="typeFilter" onchange="filterConversations()">
+                <option value="">All Types</option>
+                <option value="inquiry">Inquiry</option>
+                <option value="inquiry_pricing">Inquiry & Pricing</option>
+                <option value="pricing">Pricing</option>
+                <option value="demo_request">Demo Request</option>
+                <option value="support">Support</option>
+                <option value="follow-up">Follow-up</option>
+                <option value="complaint">Complaint</option>
+                <option value="partnership">Partnership</option>
+                <option value="other">Other</option>
+            </select>
+            <select id="sentimentFilter" onchange="filterConversations()">
+                <option value="">All Sentiments</option>
+                <option value="positive">Positive</option>
+                <option value="neutral">Neutral</option>
+                <option value="negative">Negative</option>
+            </select>
+            <select id="companyFilter" onchange="filterConversations()">
+                <option value="">All Companies</option>
+            </select>
+        </div>
+        
+        <div class="conversations-grid" id="conversationsGrid">
+            <div style="text-align: center; padding: 40px; color: #999;">Loading...</div>
+        </div>
+    </div>
+    
+    <!-- View/Edit Modal -->
+    <div id="conversationModal" class="modal">
+        <div class="modal-content modal-large">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Conversation Details</h2>
+            <div id="conversationDetails"></div>
+            <div class="form-actions">
+                <button type="button" class="btn-danger" onclick="deleteConversation()">Delete</button>
+                <button type="button" class="btn-secondary" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/static/conversations.js"></script>
+</body>
+</html>

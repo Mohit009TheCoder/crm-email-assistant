@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Companies - CRM</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="navbar">
+        <h1>🏢 Companies</h1>
+        <nav>
+            <a href="/">Email Assistant</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/companies">Companies</a>
+            <a href="/contacts">Contacts</a>
+            <a href="/conversations">Conversations</a>
+        </nav>
+    </div>
+    
+    <div class="container">
+        <div class="page-header">
+            <div>
+                <h2>Manage Companies</h2>
+                <p>View and manage all companies in your CRM</p>
+            </div>
+            <button class="btn-primary" onclick="showAddModal()">+ Add Company</button>
+        </div>
+        
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search companies..." onkeyup="searchCompanies()">
+        </div>
+        
+        <div class="table-container">
+            <table id="companiesTable">
+                <thead>
+                    <tr>
+                        <th>Company Name</th>
+                        <th>Domain</th>
+                        <th>Industry</th>
+                        <th>Phone</th>
+                        <th>Contacts</th>
+                        <th>Created</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="companiesBody">
+                    <tr><td colspan="7" style="text-align: center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Modal -->
+    <div id="companyModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Add Company</h2>
+            <form id="companyForm" onsubmit="saveCompany(event)">
+                <input type="hidden" id="companyId">
+                <div class="form-group">
+                    <label>Company Name *</label>
+                    <input type="text" id="companyName" required>
+                </div>
+                <div class="form-group">
+                    <label>Domain</label>
+                    <input type="text" id="companyDomain" placeholder="example.com">
+                </div>
+                <div class="form-group">
+                    <label>Industry</label>
+                    <input type="text" id="companyIndustry" placeholder="Technology">
+                </div>
+                <div class="form-group">
+                    <label>Phone</label>
+                    <input type="tel" id="companyPhone">
+                </div>
+                <div class="form-group">
+                    <label>Address</label>
+                    <textarea id="companyAddress" rows="3"></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="btn-primary">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script src="/static/companies.js"></script>
+</body>
+</html>
